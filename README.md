@@ -1,4 +1,4 @@
-# Minor Degree Secure Coding Laboratory Suite
+# Minor Degree Secure Coding Laboratory 
 
 A unified educational web application developed for the Minor Degree in Cyber Security and Secure Coding. The suite provides interactive, hands-on demonstrations comparing vulnerable implementations against secure, hardened countermeasures across three core cybersecurity domains.
 
