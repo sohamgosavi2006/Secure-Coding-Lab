@@ -1,0 +1,12 @@
+# ==============================================================================
+# ACME WEB SERVER DATABASE DUMP BACKUP [QUARANTINED OUTSIDE WEB ROOT]
+# Storage Path: /private_storage/backup-demo.txt
+# Access: Strictly Local System Only (Barred from Web Server Public Routing)
+# ==============================================================================
+-- Fictional Table: system_settings
+INSERT INTO system_settings (key, value) VALUES ('portal_status', 'maintenance_scheduled');
+INSERT INTO system_settings (key, value) VALUES ('internal_support_pin', '9921-DEMO');
+INSERT INTO system_settings (key, value) VALUES ('ldap_bind_dn', 'cn=demo_manager,dc=acme,dc=local');
+INSERT INTO system_settings (key, value) VALUES ('ldap_bind_password', 'FAKE_LDAP_SECRET_2026');
+
+# End of synthetic archive fixture

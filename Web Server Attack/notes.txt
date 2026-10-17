@@ -1,0 +1,28 @@
+Web Server Attack Lab — Engineering Notes & Technical Specification
+Project 3: Minor Degree in Cyber Security (Secure Coding)
+Topic: Directory Listing & Sensitive File Exposure (CWE-548 & CWE-552)
+
+1. Security Flaws Analyzed:
+   - CWE-548: Exposure of Information Through Directory Listing
+     * When a web server does not have a default index document (e.g., index.html) or has directory browsing enabled (e.g., Apache 'Options +Indexes' or Nginx 'autoindex on;'), it renders an HTML directory index of all files in the directory.
+     * Attackers exploit this for reconnaissance to discover sensitive backup files (.bak, .old), configuration scripts (.env, config.txt, settings.json), internal documentation, and hidden endpoints.
+   - CWE-552: Files or Directories Accessible to External Parties
+     * Placing sensitive configuration, database dumps, or private keys within the public web document root allows anyone to retrieve them directly via standard HTTP GET requests if the filename is known or discovered.
+
+2. Defense in Depth Countermeasures:
+   - Countermeasure 1: Disable Directory Indexing
+     * Apache httpd.conf / .htaccess: Options -Indexes
+     * Nginx nginx.conf: autoindex off; (default)
+     * Result: Returns HTTP 403 Forbidden when accessing directory root.
+   - Countermeasure 2: Segregate Sensitive Assets Outside Web Root
+     * Move configuration, database dumps, credentials, and logs to private directories outside document root (e.g., /etc/app/ or private_storage/).
+   - Countermeasure 3: Strict Resource Allowlisting
+     * Web server only maps routes to explicitly approved public resources (e.g., index.html, about.html).
+   - Countermeasure 4: Safe Path Handling & Defensive Headers
+     * Prevent path traversal (no '..' resolution across boundaries).
+     * Set 'X-Content-Type-Options: nosniff' and 'X-Frame-Options: DENY'.
+
+3. Key Educational Lesson:
+   - Disabling directory listing alone does NOT protect a sensitive file if it remains inside the public web root.
+   - If an attacker guesses, bruteforces, or knows the file URL, direct access still succeeds.
+   - True remediation requires both disabling directory indexing AND removing confidential files from public directories.

@@ -1,0 +1,18 @@
+# ==============================================================================
+# ACME DEMONSTRATION SERVER CONFIGURATION [SYNTHETIC SECURE STORAGE]
+# Located safely outside the public web server document root.
+# ==============================================================================
+ENVIRONMENT=educational-sandbox-secured
+SERVER_NODE=acme-srv-secure-01.local
+ADMIN_EMAIL=webmaster-demo@internal.acme.local
+
+# Internal Demonstration API Tokens (Synthetic Values)
+DEMO_ONLY_TOKEN=FAKE-TRAINING-VALUE-987654321
+INTERNAL_API_SECRET=DEMO_SECRET_NEVER_USE_IN_PRODUCTION
+
+# Backend Database Connection String (Stored Outside Web Root)
+DB_DRIVER=sqlite3
+DB_HOST=127.0.0.1
+DB_NAME=acme_internal_demo.db
+DB_USER=acme_demo_admin
+DB_PASSWORD=FAKE-DEMO-PASSWORD-XYZ123

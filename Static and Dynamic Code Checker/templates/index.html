@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaCodeCheck — Interactive Static &amp; Runtime Code Analysis Lab</title>
+  <meta name="description" content="Minor Degree Secure Coding educational laboratory demonstrating PMD, SpotBugs, JUnit 5, and JaCoCo.">
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('securelab_theme');
+        if (savedTheme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <header class="top-banner">
+    <div class="top-banner-left">
+      <span class="badge-sandbox">SANDBOX ENVIRONMENT</span>
+      <span>Minor Degree in Cyber Security &bull; Secure Coding Laboratory Suite</span>
+    </div>
+    <div class="top-banner-right">
+      <span class="developer-credit">Developed By <strong>Soham Gosavi</strong></span>
+    </div>
+  </header>
+
+  <!-- Main Site Header -->
+  <div class="site-header">
+    <div class="brand-section">
+      <span class="brand-title">🛡️ Minor Degree Secure Coding Lab</span>
+    </div>
+    <div class="nav-theme-container">
+      <button type="button"
+              id="global-theme-toggle-btn"
+              class="theme-toggle-switch-btn"
+              role="switch"
+              aria-checked="false"
+              aria-label="Switch to dark theme"
+              title="Toggle Light / Dark Theme">
+        <span class="theme-label-option theme-label-light" aria-hidden="true">
+          <span class="theme-glyph">☀️</span>
+          <span class="theme-text">Light</span>
+        </span>
+        <span class="theme-switch-slider" aria-hidden="true">
+          <span class="theme-slider-thumb"></span>
+        </span>
+        <span class="theme-label-option theme-label-dark" aria-hidden="true">
+          <span class="theme-glyph">🌙</span>
+          <span class="theme-text">Dark</span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Sub Navigation Bar -->
+  <nav class="sub-nav-bar" aria-label="Lab Navigation">
+    <button type="button" class="sub-tab-btn active" data-tab="overview">1. Overview</button>
+    <button type="button" class="sub-tab-btn" data-tab="guided-demo">2. Guided Demo</button>
+    <button type="button" class="sub-tab-btn" data-tab="comparison">3. Results Comparison</button>
+    <button type="button" class="sub-tab-btn" data-tab="about-tools">4. About the Tools</button>
+    <button type="button" class="sub-tab-btn" data-tab="portfolio-arch">5. Architecture &amp; Tech Stack</button>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+
+    <!-- ====================================================================
+         TAB 1: OVERVIEW
+         ==================================================================== -->
+    <section class="tab-pane active" id="tab-overview">
+      <h1 class="page-title serif-heading">JavaCodeCheck — Educational Code Analysis Lab</h1>
+      <p class="page-desc">
+        A practical, interactive laboratory demonstrating how static analysis, bytecode inspection, runtime unit testing, 
+        and code coverage work together to detect and remediate security vulnerabilities in Java software.
+      </p>
+
+      <!-- Static vs Dynamic Explanatory Banner -->
+      <div class="card" style="background: linear-gradient(135deg, #fbfaf7 0%, #f4f0e8 100%); border-left: 4px solid var(--accent-teal);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div>
+            <h3 style="color: var(--accent-teal); margin-bottom: 6px;">Static Code Analysis (PMD &amp; SpotBugs)</h3>
+            <p style="font-size: 13px; color: #555; line-height: 1.6;">
+              Evaluates source code (AST) and compiled bytecode (.class files) <strong>without executing the program</strong>. 
+              Finds potential bugs, structural anti-patterns, missing boundary checks, and resource leaks early in the SDLC.
+            </p>
+          </div>
+          <div>
+            <h3 style="color: #b87333; margin-bottom: 6px;">Dynamic Runtime Testing (JUnit 5 &amp; JaCoCo)</h3>
+            <p style="font-size: 13px; color: #555; line-height: 1.6;">
+              Executes compiled code inside the Java Virtual Machine using test cases. Verifies expected versus actual behavior, 
+              measures line and branch coverage, and reveals how unexpected inputs trigger runtime exceptions.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Tool Status Grid -->
+      <div class="card-header" style="margin-top: 10px;">
+        <h2 class="card-title">Orchestrated Analysis Tools (Genuine Tool Availability)</h2>
+        <button class="btn btn-secondary btn-sm" onclick="location.reload()">Refresh Status</button>
+      </div>
+
+      <div class="tool-status-grid">
+        <div class="tool-status-card">
+          <div>
+            <div class="tool-status-header">
+              <span class="tool-name">1. PMD (v7.0.0)</span>
+              <span class="badge" id="status-badge-pmd">Checking...</span>
+            </div>
+            <div class="tool-role">Static Source-Code AST Analyzer</div>
+          </div>
+          <div class="tool-version" id="status-version-pmd">Inspecting Java AST syntax trees</div>
+        </div>
+
+        <div class="tool-status-card">
+          <div>
+            <div class="tool-status-header">
+              <span class="tool-name">2. SpotBugs (v4.8.6)</span>
+              <span class="badge" id="status-badge-spotbugs">Checking...</span>
+            </div>
+            <div class="tool-role">Static Bytecode Pattern Analyzer</div>
+          </div>
+          <div class="tool-version" id="status-version-spotbugs">Analyzing compiled Java bytecode with ASM 9.11</div>
+        </div>
+
+        <div class="tool-status-card">
+          <div>
+            <div class="tool-status-header">
+              <span class="tool-name">3. JUnit 5 (v1.10.2)</span>
+              <span class="badge" id="status-badge-junit">Checking...</span>
+            </div>
+            <div class="tool-role">Dynamic Runtime Test Runner</div>
+          </div>
+          <div class="tool-version" id="status-version-junit">Console Standalone Test Launcher</div>
+        </div>
+
+        <div class="tool-status-card">
+          <div>
+            <div class="tool-status-header">
+              <span class="tool-name">4. JaCoCo (v0.8.12)</span>
+              <span class="badge" id="status-badge-jacoco">Checking...</span>
+            </div>
+            <div class="tool-role">Dynamic Code Coverage Instrumentation</div>
+          </div>
+          <div class="tool-version" id="status-version-jacoco">Bytecode Agent &amp; XML/HTML Reporter</div>
+        </div>
+      </div>
+
+      <!-- Action Area -->
+      <div class="card" style="display: flex; align-items: center; justify-content: space-between; padding: 24px;">
+        <div>
+          <h3 style="margin-bottom: 4px;">Ready to Explore Vulnerabilities &amp; Fixes?</h3>
+          <p style="color: var(--text-secondary); font-size: 13px;">
+            Follow the interactive 8-step guided demonstration walking through genuine defects, real static reports, runtime tests, and remediations.
+          </p>
+        </div>
+        <button type="button" class="btn btn-primary" id="btn-start-demo" style="padding: 10px 22px; font-size: 14px;">
+          Start Guided Demo →
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         TAB 2: GUIDED DEMO (THE 8-STEP EDUCATIONAL WORKFLOW)
+         ==================================================================== -->
+    <section class="tab-pane" id="tab-guided-demo">
+      <div class="guided-demo-container">
+
+        <!-- Progress Indicator Bar -->
+        <div class="demo-progress-bar">
+          <div class="step-indicator-list">
+            <div class="step-pill active" data-step="1"><span class="step-num">1</span> Understand Sample</div>
+            <div class="step-pill" data-step="2"><span class="step-num">2</span> Inspect Java Code</div>
+            <div class="step-pill" data-step="3"><span class="step-num">3</span> Run PMD</div>
+            <div class="step-pill" data-step="4"><span class="step-num">4</span> Run SpotBugs</div>
+            <div class="step-pill" data-step="5"><span class="step-num">5</span> Run JUnit 5</div>
+            <div class="step-pill" data-step="6"><span class="step-num">6</span> Run JaCoCo</div>
+            <div class="step-pill" data-step="7"><span class="step-num">7</span> Compare Fix</div>
+            <div class="step-pill" data-step="8"><span class="step-num">8</span> Lesson Summary</div>
+          </div>
+          <div class="demo-nav-controls">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-step-prev" disabled>← Back</button>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-step-next">Next Step →</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-exit-demo">Exit Demo</button>
+          </div>
+        </div>
+
+        <!-- Sample Selector & Version Switcher Bar -->
+        <div class="card" style="margin-bottom: 16px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <label for="scenario-select" style="font-weight: 600; font-size: 13px;">Selected Scenario:</label>
+            <select id="scenario-select" style="padding: 6px 12px; border: 1px solid var(--border-medium); border-radius: var(--radius-sm); font-family: inherit; font-size: 13px;">
+              <!-- Populated dynamically via JS -->
+            </select>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;" id="java-version-toggle-container">
+            <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">Source Version:</span>
+            <div class="version-pill-toggle">
+              <button type="button" class="version-pill-btn active-vulnerable" id="btn-version-vulnerable">Vulnerable Code</button>
+              <button type="button" class="version-pill-btn" id="btn-version-fixed">Corrected Code</button>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-java-clear-highlights" title="Clear all highlighted markers and coverage overlays in code editor" style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; font-size: 12px; font-weight: 600; border-radius: 4px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              <span>Clear Highlights</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 1: Understand Sample -->
+        <div id="demo-step-1" class="card demo-step-card">
+          <div class="card-header">
+            <h2 class="card-title">Step 1 — Understand the Sample Scenario</h2>
+            <span class="badge badge-warning" id="demo-step1-cwe">CWE Classification</span>
+          </div>
+          <h3 id="demo-step1-title" style="margin-bottom: 8px;">Scenario Title</h3>
+          <p id="demo-step1-summary" style="color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;"></p>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+            <div style="background: var(--status-danger-bg); border: 1px solid var(--status-danger-border); padding: 14px; border-radius: 6px;">
+              <h4 style="color: var(--status-danger); margin-bottom: 6px;">Identified Programming Defect</h4>
+              <p id="demo-step1-defect" style="font-size: 13px; color: var(--text-primary); line-height: 1.6;"></p>
+            </div>
+            <div style="background: var(--status-success-bg); border: 1px solid var(--status-success-border); padding: 14px; border-radius: 6px;">
+              <h4 style="color: var(--status-success); margin-bottom: 6px;">Expected Secure Behavior</h4>
+              <p id="demo-step1-expected" style="font-size: 13px; color: var(--text-primary); line-height: 1.6;"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 to 7: Workspace with Code Viewer + Step Panel -->
+        <div class="workspace-grid" id="java-workspace-grid">
+
+          <!-- Left Column: VS Code Styled Genuine Java Source Viewer -->
+          <div class="vscode-window">
+            <div class="vscode-titlebar">
+              <div class="vscode-dots">
+                <span class="vscode-dot dot-red"></span>
+                <span class="vscode-dot dot-yellow"></span>
+                <span class="vscode-dot dot-green"></span>
+              </div>
+              <div class="vscode-tab">
+                <span class="vscode-tab-icon">☕</span>
+                <span id="java-code-viewer-filename">NullHandlingVulnerable.java</span>
+                <span class="vscode-tab-close">&times;</span>
+              </div>
+              <div class="vscode-titlebar-right">
+                <span class="vscode-chip vscode-chip-vuln" id="java-code-viewer-badge">Vulnerable Source</span>
+                <span class="vscode-chip">Java 25</span>
+              </div>
+            </div>
+
+            <div class="vscode-breadcrumbs">
+              <span class="bc-item">src</span>
+              <span class="bc-sep">&rsaquo;</span>
+              <span class="bc-item">main</span>
+              <span class="bc-sep">&rsaquo;</span>
+              <span class="bc-item">java</span>
+              <span class="bc-sep">&rsaquo;</span>
+              <span class="bc-item">com</span>
+              <span class="bc-sep">&rsaquo;</span>
+              <span class="bc-item">securecoding</span>
+              <span class="bc-sep">&rsaquo;</span>
+              <span class="bc-item">samples</span>
+              <span class="bc-sep">&rsaquo;</span>
+              <span class="bc-active" id="java-code-viewer-breadcrumb">NullHandlingVulnerable.java</span>
+            </div>
+
+            <div class="vscode-editor-body" id="code-viewer-body">
+              <!-- Rendered dynamically with syntax highlighting -->
+            </div>
+
+            <div class="vscode-statusbar">
+              <div class="vscode-status-left">
+                <span class="status-item"><span class="status-dot"></span> Java Standard Edition</span>
+                <span class="status-item" id="vscode-lines-count">-- lines</span>
+              </div>
+              <div class="vscode-status-right">
+                <span class="status-item">Spaces: 4</span>
+                <span class="status-item">UTF-8</span>
+                <span class="status-item">LF</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Step Panels -->
+          <div>
+
+            <!-- STEP 2: Inspect Code -->
+            <div id="demo-step-2" class="card demo-step-card" style="display: none;">
+              <div class="card-header">
+                <h3 class="card-title">Step 2 — Inspect Exact Java Code</h3>
+              </div>
+              <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+                Inspect the real Java source file shown on the left. The code is loaded directly from disk (not a hardcoded snippet).
+                Use the version toggle above to examine how the vulnerable implementation compares to the corrected code.
+              </p>
+              <div style="background: var(--bg-subtle); padding: 12px; border-radius: 6px; font-size: 12px;">
+                <strong>Key Takeaway:</strong> Notice the absence of null validation, index boundary guards, or resource lifecycle management in the vulnerable file.
+              </div>
+            </div>
+
+            <!-- STEP 3: Run PMD -->
+            <div id="demo-step-3" class="card demo-step-card" style="display: none;">
+              <div class="card-header">
+                <h3 class="card-title">Step 3 — Run Static Analysis with PMD</h3>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-run-pmd">Run PMD</button>
+              </div>
+              <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+                PMD inspects the Java source file's Abstract Syntax Tree (AST) against error-prone and best-practice rulesets.
+                Clicking a finding below highlights the exact source line in the code viewer.
+              </p>
+              <div id="demo-pmd-results">
+                <div style="padding: 16px; color: #888; text-align: center; border: 1px dashed var(--border-light); border-radius: 6px;">
+                  Click <strong>Run PMD</strong> to execute static analysis on this sample.
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 4: Run SpotBugs -->
+            <div id="demo-step-4" class="card demo-step-card" style="display: none;">
+              <div class="card-header">
+                <h3 class="card-title">Step 4 — Run Static Analysis with SpotBugs</h3>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-run-spotbugs">Run SpotBugs</button>
+              </div>
+              <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+                SpotBugs compiles the Java source into bytecode and inspects class structures, control flow graphs, and data flows using ASM.
+              </p>
+              <div id="demo-spotbugs-results">
+                <div style="padding: 16px; color: #888; text-align: center; border: 1px dashed var(--border-light); border-radius: 6px;">
+                  Click <strong>Run SpotBugs</strong> to compile and analyze bytecode.
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 5: Run JUnit 5 -->
+            <div id="demo-step-5" class="card demo-step-card" style="display: none;">
+              <div class="card-header">
+                <h3 class="card-title">Step 5 — Execute Runtime Tests with JUnit 5</h3>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-run-junit">Run JUnit Tests</button>
+              </div>
+              <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+                Executes genuine JUnit 5 test cases inside the JVM to demonstrate how specific inputs trigger expected or abnormal behaviors.
+              </p>
+              <div id="demo-junit-results">
+                <div style="padding: 16px; color: #888; text-align: center; border: 1px dashed var(--border-light); border-radius: 6px;">
+                  Click <strong>Run JUnit Tests</strong> to execute dynamic test cases.
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 6: Run JaCoCo Coverage -->
+            <div id="demo-step-6" class="card demo-step-card" style="display: none;">
+              <div class="card-header">
+                <h3 class="card-title">Step 6 — Run JaCoCo Code Coverage</h3>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-run-jacoco">Run JaCoCo</button>
+              </div>
+              <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+                JaCoCo dynamically instruments bytecode execution on-the-fly to measure which lines and branches were exercised by the dynamic test suite.
+              </p>
+              <div id="demo-jacoco-results">
+                <div style="padding: 16px; color: #888; text-align: center; border: 1px dashed var(--border-light); border-radius: 6px;">
+                  Click <strong>Run JaCoCo</strong> to calculate line &amp; branch coverage.
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 7: Compare Side-by-Side -->
+            <div id="demo-step-7" class="card demo-step-card" style="display: none;">
+              <div class="card-header">
+                <h3 class="card-title">Step 7 — Compare Vulnerable vs Corrected</h3>
+              </div>
+              <div id="demo-step7-comparison-body">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- End java-workspace-grid -->
+
+        <!-- STEP 8: Summarise Lesson & Tools Analysis (Full Width - No Code Editor Needed) -->
+        <div id="demo-step-8" class="card demo-step-card" style="display: none; margin-top: 10px;">
+          <div class="card-header" style="border-bottom: 1px solid var(--border-light); padding-bottom: 14px; margin-bottom: 18px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <span class="badge badge-info" style="margin-bottom: 6px; display: inline-block;">Lesson Summary</span>
+                <h2 class="card-title" style="font-size: 24px; margin: 0;">Step 8 — Analysis Tools Breakdown &amp; Results</h2>
+              </div>
+              <span class="badge badge-warning" id="demo-step8-cwe-badge" style="font-size: 14px; padding: 6px 12px;">CWE Classification</span>
+            </div>
+          </div>
+
+          <div id="demo-step8-scenario-header" style="background: var(--bg-subtle); border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; border-left: 4px solid var(--accent-teal);">
+            <h3 id="demo-step8-title" style="margin: 0 0 6px 0; font-size: 19px; color: var(--text-primary);">Scenario Title</h3>
+            <p id="demo-step8-desc" style="margin: 0; color: var(--text-secondary); font-size: 15px; line-height: 1.6;"></p>
+          </div>
+
+            <!-- LOCKED / PENDING STATE: Shown if all 4 tools haven't been run for this scenario -->
+            <div id="demo-step8-locked" style="display: none;">
+              <div style="background: var(--bg-card); border: 2px dashed var(--border-medium); border-radius: 12px; padding: 32px 28px; text-align: center; margin-bottom: 24px;">
+                <div style="font-size: 40px; margin-bottom: 12px;">🔒</div>
+                <h3 style="font-size: 21px; margin-bottom: 8px; color: var(--text-primary);">Analysis Execution Required</h3>
+                <p style="font-size: 15px; color: var(--text-secondary); max-width: 720px; margin: 0 auto 24px auto; line-height: 1.65;">
+                  The Lesson Summary can only be generated after executing all static and dynamic test cases for this specific scenario. 
+                  Every finding, assertion outcome, and coverage percentage is derived from live tools rather than predetermined templates.
+                </p>
+
+                <!-- Tool Run Status Checklist -->
+                <div id="step8-checklist-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; max-width: 860px; margin: 0 auto 28px auto; text-align: left;">
+                  <!-- Check items rendered dynamically: PMD, SpotBugs, JUnit, JaCoCo -->
+                </div>
+
+                <!-- Action Button -->
+                <div style="display: flex; gap: 14px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-primary" id="btn-step8-run-all" style="font-size: 15px; padding: 12px 24px;">
+                    ⚡ Run All Static &amp; Dynamic Tools Now
+                  </button>
+                  <button type="button" class="btn btn-secondary" id="btn-step8-step-through" style="font-size: 15px; padding: 12px 20px;">
+                    🔍 Step Through Analysis (Start at PMD)
+                  </button>
+                </div>
+
+                <!-- Execution Progress Area -->
+                <div id="step8-run-progress" style="display: none; margin-top: 20px; font-size: 14.5px; color: var(--accent-teal); font-weight: 600;">
+                  <span class="badge badge-info" style="margin-right: 8px;">RUNNING PIPELINE</span>
+                  <span id="step8-progress-text">Executing tools...</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- UNLOCKED STATE: Rendered when all 4 tools have authentic completed data -->
+            <div id="demo-step8-unlocked" style="display: none;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                <div>
+                  <h3 style="font-size: 18px; margin-bottom: 4px; color: var(--text-primary);">Security Tools Execution Summary</h3>
+                  <p style="font-size: 14.5px; color: var(--text-secondary); margin: 0;">
+                    Authentic breakdown of live findings discovered on the vulnerable code versus the corrected code, verified by all 4 tools.
+                  </p>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-step8-refresh-summary" title="Re-execute all tools to refresh summary data">
+                  🔄 Re-run All Tools
+                </button>
+              </div>
+
+              <div id="demo-step8-tools-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                <!-- 4 Tool Cards populated dynamically via renderStep8Summary -->
+              </div>
+
+              <!-- Key Secure Coding Takeaway Box -->
+              <div style="background: var(--status-success-bg); border: 1px solid var(--status-success-border); border-left: 5px solid var(--status-success); padding: 20px 24px; border-radius: 8px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                  <span style="font-size: 22px;">🛡️</span>
+                  <strong style="color: var(--status-success); font-size: 17px;">Core Secure Coding Takeaway</strong>
+                </div>
+                <p id="demo-step8-takeaway" style="margin: 0; font-size: 15px; color: var(--text-primary); line-height: 1.65;"></p>
+              </div>
+            </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         TAB 3: RESULTS COMPARISON MATRIX
+         ==================================================================== -->
+    <section class="tab-pane" id="tab-comparison">
+      <h2 class="serif-heading" style="margin-bottom: 8px;">Results Comparison Matrix</h2>
+      <p class="page-desc">
+        Side-by-side comparison of genuine tool findings before and after remediation across all 4 scenarios. 
+        Each row reflects actual output generated by PMD, SpotBugs, JUnit 5, and JaCoCo.
+      </p>
+
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Scenario &amp; Version</th>
+              <th>PMD Findings</th>
+              <th>SpotBugs Findings</th>
+              <th>JUnit 5 Test Outcomes</th>
+              <th>JaCoCo Line Coverage</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="comparison-table-body">
+            <!-- Rendered dynamically via /api/comparison -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         TAB 6: ABOUT THE TOOLS
+         ==================================================================== -->
+    <section class="tab-pane" id="tab-about-tools">
+      <h2 class="serif-heading" style="margin-bottom: 8px;">About the Four Analysis Tools</h2>
+      <p class="page-desc">Comprehensive reference explaining tool roles, mechanisms, and secure coding practices.</p>
+
+      <div class="arch-grid">
+        <div class="arch-card">
+          <span class="arch-tag">Static Analysis #1</span>
+          <h3 class="arch-title">PMD 7.0.0</h3>
+          <p style="font-size: 13px; color: #555; line-height: 1.6;">
+            PMD analyzes Java source code directly without compiling it. It converts code into an Abstract Syntax Tree (AST) and evaluates XPath and Java-based rules against that tree.
+          </p>
+        </div>
+
+        <div class="arch-card">
+          <span class="arch-tag">Static Analysis #2</span>
+          <h3 class="arch-title">SpotBugs 4.8.6</h3>
+          <p style="font-size: 13px; color: #555; line-height: 1.6;">
+            SpotBugs operates on compiled Java bytecode (.class files) using ObjectWeb ASM. It builds control flow graphs and inspects class structures to detect bug patterns.
+          </p>
+        </div>
+
+        <div class="arch-card">
+          <span class="arch-tag">Dynamic Testing</span>
+          <h3 class="arch-title">JUnit 5 (Jupiter)</h3>
+          <p style="font-size: 13px; color: #555; line-height: 1.6;">
+            JUnit 5 is the modern test execution framework for Java. It executes dynamic test methods inside the JVM, verifying assertions and catching unexpected exceptions.
+          </p>
+        </div>
+
+        <div class="arch-card">
+          <span class="arch-tag">Dynamic Coverage</span>
+          <h3 class="arch-title">JaCoCo 0.8.12</h3>
+          <p style="font-size: 13px; color: #555; line-height: 1.6;">
+            JaCoCo uses a Java Virtual Machine Tool Interface (JVMTI) Java Agent to instrument bytecode on-the-fly, recording line-by-line and branch execution counts.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         TAB 7: ARCHITECTURE & TECH STACK (SECTION EXPLAINING ALL PROJECTS)
+         ==================================================================== -->
+    <section class="tab-pane" id="tab-portfolio-arch">
+      <h2 class="serif-heading" style="margin-bottom: 8px;">Projects Architecture &amp; Tech Stack Hub</h2>
+      <p class="page-desc">
+        Detailed technical architectural overview explaining all projects in this Secure Coding laboratory suite, 
+        their respective technology stacks, execution pipelines, and security verification methodologies.
+      </p>
+
+      <!-- Project 1 Card -->
+      <div class="card" style="border-left: 4px solid #c0392b; margin-bottom: 24px;">
+        <span class="arch-tag" style="color: #c0392b;">Project 1 &bull; Web Security</span>
+        <h3 class="serif-heading" style="font-size: 20px; margin: 4px 0 10px 0;">SecureLab — SQL Injection Explorer</h3>
+        <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.6;">
+          Demonstrates <strong>CWE-89: SQL Injection</strong> and its remediation using <strong>Parameterized Queries (Prepared Statements)</strong>. 
+          Provides a side-by-side comparison of raw string concatenation versus pre-compiled SQL parameter binding with a real-time query inspector.
+        </p>
+        <div class="tech-stack-list">
+          <span class="tech-tag">Python 3.14</span>
+          <span class="tech-tag">Flask 3.0</span>
+          <span class="tech-tag">SQLite 3</span>
+          <span class="tech-tag">HTML5 / CSS3</span>
+          <span class="tech-tag">Vanilla JavaScript</span>
+        </div>
+        <div style="font-size: 12.5px; color: #666; margin-top: 8px;">
+          <strong>Location in Workspace:</strong> <code>Projects/SQL Injection/sql-injection-lab/</code>
+        </div>
+      </div>
+
+      <!-- Project 2 Card -->
+      <div class="card" style="border-left: 4px solid var(--accent-teal); margin-bottom: 24px;">
+        <span class="arch-tag">Project 2 &bull; Code Analysis &amp; Quality</span>
+        <h3 class="serif-heading" style="font-size: 20px; margin: 4px 0 10px 0;">JavaCodeCheck — Static &amp; Runtime Code Analysis Lab</h3>
+        <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.6;">
+          Demonstrates multi-layer verification of Java software using four genuine tools: 
+          <strong>PMD</strong> (AST source analysis), <strong>SpotBugs</strong> (bytecode inspection), 
+          <strong>JUnit 5</strong> (dynamic runtime tests), and <strong>JaCoCo</strong> (code coverage).
+        </p>
+        <div class="tech-stack-list">
+          <span class="tech-tag">Java 25 LTS</span>
+          <span class="tech-tag">PMD 7.0.0</span>
+          <span class="tech-tag">SpotBugs 4.8.6</span>
+          <span class="tech-tag">ASM 9.11</span>
+          <span class="tech-tag">JUnit 5.10.2</span>
+          <span class="tech-tag">JaCoCo 0.8.12</span>
+          <span class="tech-tag">Flask Python Orchestrator</span>
+        </div>
+        <div style="font-size: 12.5px; color: #666; margin-top: 8px;">
+          <strong>Location in Workspace:</strong> <code>Projects/Static and Dynamic Code Checker/</code>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div style="font-weight: 600;">Secure Coding Minor Degree &bull; Academic Practical Examination 2026</div>
+    <div class="site-footer-subtitle">
+      Designed for Educational Demonstration &bull; Combined Projects Suite
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

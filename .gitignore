@@ -1,0 +1,61 @@
+# Exclude project documentation and presentation assets
+/Documentation/
+/documentation/
+
+# Python Virtual Environments (directories and symlinks)
+venv
+venv/
+.venv
+.venv/
+**/venv
+**/venv/
+**/.venv
+**/.venv/
+venv*
+venv*/
+*/venv*
+*/venv*/
+*venv*
+
+# Python Bytecode and Caches
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Java Build Output (Maven / javac)
+target/
+**/target/
+*.class
+**/target/**
+
+# Test Reports and Runtime Artifacts
+*.log
+*.exec
+reports/
+**/reports/
+
+# Node Modules (if any)
+node_modules/
+**/node_modules/
+
+# Operating System & IDE Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Secrets and Environment Variables
+.env
+.env.*
+*.local
+!*.local.example

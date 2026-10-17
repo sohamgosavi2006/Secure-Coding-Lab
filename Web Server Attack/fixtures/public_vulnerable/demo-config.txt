@@ -1,0 +1,23 @@
+# ==============================================================================
+# ACME DEMONSTRATION SERVER CONFIGURATION [SYNTHETIC TRAINING DATA ONLY]
+# WARNING: THIS IS AN EDUCATIONAL FIXTURE. ALL VALUES ARE FICTIONAL PLACEHOLDERS.
+# ==============================================================================
+ENVIRONMENT=educational-sandbox
+SERVER_NODE=acme-srv-demo-01.local
+ADMIN_EMAIL=webmaster-demo@internal.acme.local
+
+# Internal Demonstration API Tokens (Synthetic Values)
+DEMO_ONLY_TOKEN=FAKE-TRAINING-VALUE-987654321
+INTERNAL_API_SECRET=DEMO_SECRET_NEVER_USE_IN_PRODUCTION
+
+# Backend Database Connection String (Fictional Host)
+DB_DRIVER=sqlite3
+DB_HOST=127.0.0.1
+DB_NAME=acme_internal_demo.db
+DB_USER=acme_demo_admin
+DB_PASSWORD=FAKE-DEMO-PASSWORD-XYZ123
+
+# Cloud Storage Credentials (Synthetic)
+S3_BUCKET_NAME=acme-demo-private-backups-2026
+S3_ACCESS_KEY_ID=AKIA_DEMO_FAKE_KEY_001
+S3_SECRET_ACCESS_KEY=DEMO_SECRET_FAKE_HASH_ABCD1234EFGH5678
